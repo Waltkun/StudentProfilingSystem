@@ -1,0 +1,1011 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* - COLORS (change them here and the whole site follows) - */
+:root {
+    --black: #05050a;
+    --panel: #15151d;
+    --gold: #d4af37;
+    --gold-soft: #f0d77a;
+    --blue: #2563eb;
+    --blue-dark: #1d4ed8;
+    --text: #eaeaf0;
+    --muted: #9a9aab;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+/* The background lives on <html> so it covers the whole page (including the space
+    around the wrapper) and the dots/rings below can show on top of it. */
+html {
+    color-scheme: dark;
+    background-color: var(--black);
+    background-image:
+        radial-gradient(circle at 12% 18%, rgba(37, 99, 235, 0.38) 0, transparent 42%),
+        radial-gradient(circle at 88% 85%, rgba(212, 175, 55, 0.24) 0, transparent 42%),
+        linear-gradient(135deg, #05050a 0%, #0a0a1f 55%, #05050a 100%);
+    background-attachment: fixed;
+}
+
+body {
+    min-height: 100vh;
+    color: var(--text);
+}
+
+/* - PAGE BACKGROUND (outside the wrapper) - */
+/* fine gold dot grid */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: radial-gradient(rgba(212, 175, 55, 0.22) 1px, transparent 1.5px);
+    background-size: 30px 30px;
+}
+
+/* decorative rings in two corners */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 7% 90%,
+            transparent 0 150px, rgba(212, 175, 55, 0.45) 150px 152px,
+            transparent 152px 190px, rgba(37, 99, 235, 0.5) 190px 192px,
+            transparent 192px 230px, rgba(212, 175, 55, 0.2) 230px 232px, transparent 232px),
+        radial-gradient(circle at 93% 10%,
+            transparent 0 110px, rgba(37, 99, 235, 0.55) 110px 112px,
+            transparent 112px 150px, rgba(212, 175, 55, 0.4) 150px 152px,
+            transparent 152px 190px, rgba(37, 99, 235, 0.25) 190px 192px, transparent 192px);
+}
+
+a { color: var(--gold); }
+
+/* - SLIDING CONTAINER -*/
+.wrapper {
+    position: relative;
+    background: var(--panel);
+    width: 850px;
+    max-width: 95%;
+    height: 620px;
+    margin: 50px auto;
+    border-radius: 12px;
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75),
+                0 0 45px rgba(37, 99, 235, 0.25);
+    overflow: hidden;
+}
+
+.form-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+}
+
+.login    { z-index: 2; }
+.register { z-index: 1; opacity: 0; }
+
+/* when .active is on the wrapper: forms slide right, overlay slides left */
+.wrapper.active .login    { transform: translateX(100%); opacity: 0; }
+.wrapper.active .register { transform: translateX(100%); opacity: 1; z-index: 5; }
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    z-index: 10;
+    background: linear-gradient(135deg, var(--blue-dark) 0%, #07072a 70%, #000 100%);
+    border-left: 2px solid var(--gold);
+    color: #fff;
+    text-align: center;
+    transition: transform 0.6s ease-in-out;
+}
+
+.wrapper.active .overlay {
+    transform: translateX(-100%);
+    border-left: none;
+    border-right: 2px solid var(--gold);
+}
+
+.overlay-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    transition: opacity 0.4s ease-in-out;
+}
+
+.overlay-panel.for-register { opacity: 0; pointer-events: none; }
+.wrapper.active .for-login    { opacity: 0; pointer-events: none; }
+.wrapper.active .for-register { opacity: 1; pointer-events: auto; }
+
+.overlay-panel h2 { font-size: 1.8rem; color: var(--gold); }
+
+.overlay button.ghost {
+    color: #fff;
+    border: 2px solid var(--gold);
+    border-radius: 5px;
+    padding: 8px 2.5rem;
+    font-size: 1.1rem;
+    transition: 0.3s;
+}
+
+.overlay button.ghost:hover {
+    background: var(--gold);
+    color: #000;
+    text-decoration: none;
+}
+
+.no-anim, .no-anim * {
+    transition: none !important;
+}
+
+/* - FORM STYLES - */
+
+form {
+    margin: 0 1.5rem;
+}
+
+.form-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    color: var(--gold);
+    padding: 1.3rem;
+    margin-bottom: 0.4rem;
+}
+
+.input-group {
+    padding: 1% 0;
+    position: relative;
+}
+
+.input-group input {
+    color: inherit;
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #4a4a60;
+    padding-left: 1.5rem;
+    font-size: 15px;
+    transition: border-color 0.2s;
+}
+
+.input-group i {
+    position: absolute;
+    color: var(--gold);
+    left: -1rem;
+    top: 30%;
+    transform: translateY(-50%);
+}
+
+.input-group input:focus {
+    background-color: transparent;
+    outline: transparent;
+    border-bottom: 2px solid var(--gold);
+}
+
+.input-group input::placeholder {
+    color: transparent;
+}
+
+.input-group label {
+    color: var(--muted);
+    position: relative;
+    left: 1.2em;
+    top: -1.3em;
+    cursor: auto;
+    pointer-events: none;
+    transition: 0.1s ease all;
+}
+
+.input-group input:focus ~ label,
+.input-group input:not(:placeholder-shown) ~ label {
+    top: -3em;
+    color: var(--gold);
+    font-size: 15px;
+}
+
+/* keeps the dark look when Chrome auto-fills a saved email/password */
+.input-group input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px var(--panel) inset;
+    -webkit-text-fill-color: var(--text);
+    caret-color: var(--text);
+}
+
+.input-group input:-webkit-autofill ~ label {
+    top: -3em;
+    color: var(--gold);
+    font-size: 15px;
+}
+
+.recover {
+    text-align: right;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    padding: 2px 0;
+}
+
+.recover a {
+    text-decoration: none;
+    color: var(--muted);
+}
+
+.recover a:hover {
+    color: var(--gold);
+    text-decoration: underline;
+}
+
+.button {
+    font-family: inherit;
+    font-size: 1.3rem;
+    padding: 8px 0;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+    width: 100%;
+    background: var(--blue);
+    color: #fff;
+    transition: 0.3s;
+}
+
+.button:hover {
+    background: var(--gold);
+    color: #000;
+    transform: translateY(-2px);
+    cursor: pointer;
+}
+
+.button:active {
+    transform: translateY(0);
+}
+
+.or {
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+    text-align: center;
+    color: var(--muted);
+}
+
+.icons {
+    text-align: center;
+}
+
+.icons a {
+    text-decoration: none;
+}
+
+.icons a:hover i {
+    transform: translateY(-5px) scale(1.1);
+    background: var(--blue);
+    color: #fff;
+    border-color: var(--gold);
+    box-shadow: 0 10px 20px rgba(212, 175, 55, 0.35);
+}
+
+.icons a:active i {
+    transform: translateY(0) scale(0.95);
+}
+
+.icons i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    padding: 0.4rem 1.2rem;
+    border-radius: 6px;
+    font-size: 1.6rem;
+    cursor: pointer;
+    border: 2px solid #33334a;
+    margin: 0 6px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease,
+                background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+button {
+    color: var(--text);
+    border: none;
+    background-color: transparent;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+/* - LOGOUT BUTTON (homepage2.php) - */
+.logout {
+    display: inline-block;
+    padding: 0.9rem 1.6rem;
+    text-decoration: none;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    border-radius: 800px;
+    transition: 0.4s;
+}
+
+.logout a { color: inherit; text-decoration: none; }
+
+.logout:hover {
+    background: var(--gold);
+    color: #000;
+}
+
+
+/* ============================================================
+   HOMEPAGE (homepage2.php) - Student Profile page
+   ============================================================ */
+
+.home-page {
+    padding: 30px 16px 50px;
+}
+
+/* extra background decoration for this page */
+.bg-shapes {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.bg-shapes span { position: absolute; display: block; }
+
+.bg-shapes .s1 {
+    width: 340px; height: 340px;
+    top: 14%; left: -110px;
+    border: 2px solid rgba(212, 175, 55, 0.22);
+    border-radius: 40px;
+    transform: rotate(25deg);
+}
+
+.bg-shapes .s2 {
+    width: 240px; height: 240px;
+    bottom: 6%; right: -70px;
+    border: 2px solid rgba(37, 99, 235, 0.4);
+    border-radius: 30px;
+    transform: rotate(-18deg);
+}
+
+.bg-shapes .s3 {
+    width: 12px; height: 12px;
+    top: 24%; right: 9%;
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 20px 4px rgba(212, 175, 55, 0.6);
+}
+
+.bg-shapes .s4 {
+    width: 10px; height: 10px;
+    bottom: 22%; left: 8%;
+    background: var(--blue);
+    border-radius: 50%;
+    box-shadow: 0 0 20px 4px rgba(37, 99, 235, 0.7);
+}
+
+/* the big frame from the sketch */
+.profile-card {
+    position: relative;
+    max-width: 1100px;
+    margin: 10px auto;
+    padding: 26px 42px 42px;
+    background: linear-gradient(160deg, rgba(21, 21, 29, 0.97), rgba(10, 10, 22, 0.97));
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    border-radius: 14px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75),
+                0 0 45px rgba(37, 99, 235, 0.22);
+    overflow: hidden;
+}
+
+/* blue-to-gold line along the top edge */
+.profile-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--blue), var(--gold));
+}
+
+/* top bar: logo left, logout right */
+.pc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #26263a;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-mark {
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.35);
+    overflow: hidden; /* Keeps the image inside the rounded box */
+    padding: 4px; /* Gives the image a little breathing room */
+}
+
+.logo-mark img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Ensures the whole logo is visible */
+    border-radius: 8px;
+}
+
+.logo-text {
+    font-weight: 700;
+    font-size: 1.05rem;
+    line-height: 1.15;
+}
+
+.logo-text small {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.68rem;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.pc-header .logout {
+    padding: 0.5rem 1.5rem;
+    font-size: 0.9rem;
+}
+
+/* two columns: title on the left, form on the right */
+.pc-body {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 46px;
+    padding-top: 34px;
+}
+
+.pc-title {
+    font-size: 3.1rem;
+    line-height: 1.02;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text);
+}
+
+.pc-title span {
+    display: block;
+    color: var(--gold);
+}
+
+.pc-welcome {
+    margin-top: 14px;
+    font-size: 0.95rem;
+    color: var(--muted);
+}
+
+.avatar {
+    width: 118px;
+    height: 118px;
+    margin: 30px 0 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--gold);
+    background: radial-gradient(circle at 30% 30%, #1e2d6e, #0b0b10);
+    border: 3px solid var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 0 7px rgba(212, 175, 55, 0.12),
+                0 12px 30px rgba(0, 0, 0, 0.6);
+}
+
+.pc-progress-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+}
+
+.pc-progress-top strong { color: var(--gold); }
+
+.pc-bar {
+    height: 10px;
+    background: #0b0b10;
+    border: 1px solid #26263a;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.pc-bar > div {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--gold));
+    border-radius: 20px;
+    transition: width 0.6s ease;
+}
+
+/* the form boxes from the sketch */
+.pc-form form { margin: 0; }
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 28px;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 0.75rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.field input,
+.field select {
+    width: 100%;
+    padding: 13px 14px;
+    background: #0b0b10;
+    color: var(--text);
+    border: 1px solid #33334a;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.field input::placeholder { color: #5d5d72; }
+
+.field input:focus,
+.field select:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.18);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+
+.save-btn {
+    padding: 13px 38px;
+    background: var(--blue);
+    color: #fff;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.save-btn:hover {
+    background: var(--gold);
+    color: #000;
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+
+/* success / error banner */
+.message {
+    margin-bottom: 20px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.message.success { background: #10281a; color: #7be0a0; border: 1px solid #1f6b3c; }
+.message.error   { background: #3a1217; color: #ff8a8a; border: 1px solid #7a2630; }
+
+/* small screens: stack everything */
+@media (max-width: 860px) {
+    .profile-card { padding: 22px 20px 30px; }
+    .pc-body { grid-template-columns: 1fr; gap: 28px; }
+    .pc-title { font-size: 2.3rem; }
+    .grid { grid-template-columns: 1fr; }
+}
+
+
+/* - NEW: Password Eye Icon - */
+.input-group {
+    position: relative;
+}
+.toggle-pw {
+    position: absolute;
+    right: 0;
+    top: 35%; /* Adjust based on your input height */
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: color 0.3s;
+}
+.toggle-pw:hover {
+    color: var(--gold);
+}
+.input-group input {
+    padding-right: 2rem; /* Make room for the eye icon */
+}
+
+/* - NEW: Logout Button Animation - */
+.logout a {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    display: inline-block;
+    transition: color 0.4s ease;
+}
+.logout a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--gold);
+    transition: left 0.4s ease;
+    z-index: -1;
+    border-radius: inherit;
+}
+.logout:hover a {
+    color: #000;
+}
+.logout:hover a::before {
+    left: 0;
+}
+
+/* - NEW: Make form fields glow slightly on hover - */
+.field input:hover, .field select:hover {
+    border-color: rgba(212, 175, 55, 0.5);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
+}
+
+/* - SHAKE ANIMATION FOR ERRORS - */
+@keyframes shake {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-10px); }
+    40% { transform: translateX(10px); }
+    60% { transform: translateX(-10px); }
+    80% { transform: translateX(10px); }
+    100% { transform: translateX(0); }
+}
+
+.shake {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+/* Make sure the error box looks nice inside the form */
+.message.error {
+    margin: 0 1.5rem 15px;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    background: rgba(220, 53, 69, 0.1);
+    color: #ff6b6b;
+    border: 1px solid #ff6b6b;
+    font-size: 0.9rem;
+}
+
+
+/* - FIX FOR GENDER DROPDOWN THEME - */
+.input-group select {
+    width: 100%;
+    background-color: transparent;
+    color: var(--text);
+    border: none;
+    border-bottom: 1px solid #4a4a60;
+    padding-left: 1.3rem;
+    font-size: 15px;
+    font-family: inherit;
+    appearance: none; /* Removes default browser arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    padding-bottom: 5px;
+}
+
+/* Add a custom arrow so it looks like the other inputs */
+.input-group select {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4af37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 5px center;
+    background-size: 1em;
+}
+
+.input-group select:focus {
+    outline: none;
+    border-bottom: 2px solid var(--gold);
+}
+
+/* Fix the dropdown options background (works in most browsers) */
+.input-group select option {
+    background-color: var(--panel);
+    color: var(--text);
+    padding: 10px;
+}
+
+/* Adjust the icon slightly for the select box */
+.input-group select ~ i {
+    top: 40%;
+}
+
+/* - FOR REGISTRATION FORM OVERLAP - */
+
+/* 1. Ensure the inputs have enough padding at the bottom so labels don't collide */
+.input-group input, 
+.input-group select {
+    padding-bottom: 5px;
+}
+
+/* 2. Style the custom Select box to match the inputs */
+.input-group select {
+    width: 100%;
+    background-color: transparent;
+    color: var(--text);
+    border: none;
+    border-bottom: 1px solid #4a4a60;
+    padding-left: 1.5rem;
+    font-size: 15px;
+    font-family: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+
+    /* Custom gold arrow */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4af37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 5px center;
+    background-size: 1em;
+}
+
+.input-group select:focus {
+    outline: none;
+    border-bottom: 2px solid var(--gold);
+}
+
+/* 3. Fix the dropdown options background */
+.input-group select option {
+    background-color: var(--panel);
+    color: var(--text);
+    padding: 10px;
+}
+
+/* 4. Fix the icons for the side-by-side fields */
+.input-group select ~ i,
+.input-group input#reg-birthday ~ i {
+    top: 35%;
+    left: -1rem;
+}
+/* ============================================================
+   PERSONA-STYLE NAV (homepage2.php)
+   ============================================================ */
+.persona-nav {
+    display: flex;
+    align-items: center;
+    gap: 34px;
+    flex-wrap: wrap;
+    margin: 28px 0 8px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #26263a;
+}
+
+.nav-item {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    font-style: italic;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transform: skewX(-10deg);
+    padding: 4px 2px;
+    transition: color 0.25s, transform 0.25s cubic-bezier(.25,.8,.25,1), opacity 0.25s, text-shadow 0.25s;
+}
+
+.persona-nav:has(.nav-item:hover) .nav-item:not(:hover) { opacity: 0.4; }
+
+.nav-item:hover,
+.nav-item.active {
+    color: var(--gold);
+    transform: skewX(-10deg) scale(1.2) translateX(4px);
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6);
+}
+
+.nav-logout:hover,
+.nav-logout.active {
+    color: #ff6b6b;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* ---- panels ---- */
+.panel { display: none; animation: panelIn 0.35s ease; }
+.panel.active { display: block; }
+@keyframes panelIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.view-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 28px;
+    padding-top: 10px;
+}
+
+.view-field.full { grid-column: 1 / -1; }
+
+.view-field label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 0.75rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.view-field .v {
+    padding: 13px 14px;
+    background: #0b0b10;
+    border: 1px solid #33334a;
+    border-radius: 8px;
+    font-size: 15px;
+    color: var(--text);
+}
+
+.qr-box {
+    display: inline-block;
+    padding: 12px;
+    background: #f5eecb;
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    line-height: 0;
+}
+
+#panel-profile .pc-body { padding-top: 24px; }
+
+
+
+
+/* ============================================================
+NEW DASHBOARD LAYOUT (Sidebar + Content)
+   ============================================================ */
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr; /* Fixed width for sidebar, rest for content */
+    gap: 40px;
+    padding-top: 24px;
+    align-items: start;
+}
+
+.dashboard-content {
+    min-width: 0; /* Prevents overflow issues */
+}
+
+/* ============================================================
+PERSONA 3 STYLE SIDEBAR NAVIGATION & HOVER EFFECT
+   ============================================================ */
+.persona-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding-right: 20px;
+    border-right: 1px solid #26263a;
+    min-height: 400px; /* Gives space for the menu to push items up/down */
+    padding-top: 20px;
+}
+
+.nav-item {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    font-style: italic;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 8px 0;
+    text-align: left;
+    width: 100%;
+    
+    /* The base tilt for the P3 look */
+    transform: skewX(-15deg);
+    transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+}
+
+/* The P3 Hover Effect */
+.nav-item:hover, 
+.nav-item.active {
+    color: #ff0000; /* P3 Red */
+    font-size: 1.6rem; /* Grows significantly */
+    transform: skewX(-15deg) translateX(15px) scale(1.05);
+    text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.8); /* Hard black shadow */
+    z-index: 10;
+}
+
+/* Dim the other items when hovering the menu (JS handles the push) */
+.persona-nav:has(.nav-item:hover) .nav-item:not(:hover):not(.active) {
+    opacity: 0.4;
+}
+
+/* Make Logout red on hover too (but standard red) */
+.nav-logout:hover {
+    color: #ff6b6b !important;
+}
+
+/* When the active panel is clicked, keep it gold/blue (optional, remove if you want it red) */
+.nav-item.active {
+    color: var(--gold);
+    font-size: 1.4rem;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.8);
+}
+
+/* Responsive: stack on mobile */
+@media (max-width: 860px) {
+    .dashboard-layout {
+        grid-template-columns: 1fr;
+    }
+    .persona-nav {
+        border-right: none;
+        border-bottom: 1px solid #26263a;
+        flex-direction: row;
+        flex-wrap: wrap;
+        min-height: auto;
+        padding-top: 0;
+        padding-bottom: 15px;
+    }
+    .nav-item {
+        width: auto;
+        margin-right: 15px;
+    }
+    .nav-item:hover, .nav-item.active {
+        font-size: 1.2rem;
+    }
+}
+
+.avatar { overflow: hidden; } /* keeps the img inside the gold ring */
+.avatar img { display:block; width:100%; height:100%; object-fit:cover; }
