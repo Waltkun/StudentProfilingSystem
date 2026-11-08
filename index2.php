@@ -14,6 +14,51 @@ if (isset($_SESSION['email'])) {
     <title>Student Portal - Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style2.css">
+    <style>
+        /* Specific styles for the new date dropdowns */
+        .date-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            position: relative;
+        }
+        .date-group .input-group {
+            flex: 1;
+            margin: 0;
+        }
+        /* Target the select boxes specifically */
+        .date-group select {
+            width: 100%;
+            background-color: transparent;
+            color: var(--text);
+            border: none;
+            border-bottom: 1px solid #4a4a60;
+            padding-left: 1.5rem;
+            padding-bottom: 5px;
+            font-size: 15px;
+            font-family: inherit;
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4af37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 5px center;
+            background-size: 1em;
+        }
+        .date-group select:focus {
+            outline: none;
+            border-bottom: 2px solid var(--gold);
+        }
+        .date-group select option {
+            background-color: var(--panel);
+            color: var(--text);
+            padding: 10px;
+        }
+        /* Fix icon positioning */
+        .date-group .input-group > i {
+            top: 45%;
+        }
+    </style>
 </head>
 <body>
 
@@ -81,23 +126,60 @@ if (isset($_SESSION['email'])) {
                 <label for="reg-email">Email</label>
             </div>
 
-            <div class="input-group" style="display: flex; gap: 20px; margin-top: 10px;">
-                <div style="flex: 1; position: relative;">
-                    <i class="fas fa-venus-mars"></i>
-                    <select name="gender" id="reg-gender" required>
-                        <option value="" disabled selected>Select Gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                <div style="flex: 1; position: relative;">
-                    <i class="fas fa-birthday-cake"></i>
-                    <input type="text" name="birthday" id="reg-birthday" placeholder="Birthday (mm/dd/yy)" maxlength="10" required>
-                </div>
+            <!-- GENDER -->
+            <div class="input-group" style="margin-top: 10px;">
+                <i class="fas fa-venus-mars"></i>
+                <select name="gender" id="reg-gender" required>
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
             </div>
 
-            <div class="input-group">
+            <!-- NEW BIRTHDAY DROPDOWNS -->
+            <div class="date-group">
+                <!-- Month -->
+                <div class="input-group">
+                    <i class="fas fa-calendar-alt"></i>
+                    <select id="b_month" required>
+                        <option value="" disabled selected>Month</option>
+                        <option value="01">Jan</option>
+                        <option value="02">Feb</option>
+                        <option value="03">Mar</option>
+                        <option value="04">Apr</option>
+                        <option value="05">May</option>
+                        <option value="06">Jun</option>
+                        <option value="07">Jul</option>
+                        <option value="08">Aug</option>
+                        <option value="09">Sep</option>
+                        <option value="10">Oct</option>
+                        <option value="11">Nov</option>
+                        <option value="12">Dec</option>
+                    </select>
+                </div>
+
+                <!-- Day -->
+                <div class="input-group">
+                    <i class="fas fa-calendar-day"></i>
+                    <select id="b_day" required>
+                        <option value="" disabled selected>Day</option>
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+
+                <!-- Year (Editable) -->
+                <div class="input-group">
+                    <i class="fas fa-calendar-week"></i>
+                    <!-- Using type="number" gives a text box with up/down arrows, or just a clean text box -->
+                    <input type="text" id="b_year" class="year-input" placeholder="Year" maxlength="4" required 
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                </div>
+            </div>
+            <!-- HIDDEN INPUT TO SEND TO BACKEND -->
+            <input type="hidden" name="birthday" id="reg-birthday">
+
+            <div class="input-group" style="margin-top: 15px;">
                 <i class="fas fa-lock"></i>
                 <input type="password" name="password" id="reg-password" placeholder="Password" required minlength="6">
                 <label for="reg-password">Password</label>
@@ -115,9 +197,9 @@ if (isset($_SESSION['email'])) {
                 </button>
             </div>
 
-            <input type="submit" class="button" value="Sign Up" name="SignUp">
+            <input type="submit" class="button" value="Sign Up" name="SignUp" onclick="combineBirthday()">
         </form>
-    </div> <!-- 🚨 THIS WAS MISSING! It closes the register form box -->
+    </div> 
 
     <!-- OVERLAY -->
     <div class="overlay">
@@ -133,17 +215,56 @@ if (isset($_SESSION['email'])) {
         </div>
     </div>
 
-</div> <!-- 🚨 THIS WAS MISSING! It closes the whole wrapper -->
+</div> 
 
 <script src="script2.js"></script>
 
 <script>
-    document.getElementById('reg-birthday').addEventListener('input', function (e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 2) value = value.slice(0, 2) + '/' + value.slice(2);
-        if (value.length > 5) value = value.slice(0, 5) + '/' + value.slice(5);
-        e.target.value = value;
-    });
+    // --- LOGIC FOR BIRTHDAY DROPDOWNS ---
+
+    const monthSelect = document.getElementById('b_month');
+    const daySelect = document.getElementById('b_day');
+    const yearInput = document.getElementById('b_year');
+
+    // Function to populate days based on selected month/year
+    function populateDays() {
+        const month = parseInt(monthSelect.value);
+        const year = parseInt(yearInput.value) || 2024; // Default to leap year for Feb calc if year is empty
+
+        // Clear existing days (except the placeholder)
+        daySelect.innerHTML = '<option value="" disabled selected>Day</option>';
+
+        if (!month) return; // If no month selected, stop here
+
+        // Calculate days in month
+        const daysInMonth = new Date(year, month, 0).getDate();
+
+        for (let i = 1; i <= daysInMonth; i++) {
+            const dayVal = i < 10 ? '0' + i : i;
+            const opt = document.createElement('option');
+            opt.value = dayVal;
+            opt.textContent = i;
+            daySelect.appendChild(opt);
+        }
+    }
+
+    // Listen for changes in Month or Year to update Day
+    monthSelect.addEventListener('change', populateDays);
+    yearInput.addEventListener('input', populateDays);
+
+    // Combine values into YYYY-MM-DD before submitting
+    function combineBirthday() {
+        const m = monthSelect.value;
+        const d = daySelect.value;
+        const y = yearInput.value;
+
+        // Validate if fields are empty
+        if (m && d && y) {
+            // Format to match what the database expects: 2006-01-30
+            const formattedDate = `${y}-${m}-${d}`;
+            document.getElementById('reg-birthday').value = formattedDate;
+        }
+    }
 </script>
 
 </body>
