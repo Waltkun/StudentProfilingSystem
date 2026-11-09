@@ -58,6 +58,34 @@ if (isset($_SESSION['email'])) {
         .date-group .input-group > i {
             top: 45%;
         }
+
+        /* 🚨 PERSONA 3 TEXT STYLES 🚨 */
+        .p3-text {
+            font-family: "Poppins", sans-serif;
+            font-weight: 700;
+            font-style: italic;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--gold);
+            transform: skewX(-15deg);
+            text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.8);
+            display: inline-block;
+        }
+
+        .p3-form-title {
+            font-size: 2rem; /* Larger for main titles */
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 0;
+            padding-top: 10px;
+        }
+
+        .p3-overlay-title {
+            font-size: 2.2rem; /* Larger for the side panels */
+            color: var(--gold); /* Keeps the gold color from the original overlay */
+            margin-bottom: 15px;
+            line-height: 1.1;
+        }
     </style>
 </head>
 <body>
@@ -66,7 +94,8 @@ if (isset($_SESSION['email'])) {
 
     <!-- LOG IN -->
     <div class="form-box login" id="signIn">
-        <h1 class="form-title">Student Log In</h1>
+        <!-- APPLIED P3 STYLE HERE -->
+        <h1 class="form-title p3-text p3-form-title">Student Log In</h1>
         
         <div id="loginError" class="message error" style="display: none;"></div>
 
@@ -96,7 +125,8 @@ if (isset($_SESSION['email'])) {
 
     <!-- REGISTER -->
     <div class="form-box register" id="signUp" inert>
-        <h1 class="form-title">Student Register</h1>
+        <!-- APPLIED P3 STYLE HERE -->
+        <h1 class="form-title p3-text p3-form-title">Student Register</h1>
         
         <div id="registerError" class="message error" style="display: none;"></div>
         
@@ -171,7 +201,6 @@ if (isset($_SESSION['email'])) {
                 <!-- Year (Editable) -->
                 <div class="input-group">
                     <i class="fas fa-calendar-week"></i>
-                    <!-- Using type="number" gives a text box with up/down arrows, or just a clean text box -->
                     <input type="text" id="b_year" class="year-input" placeholder="Year" maxlength="4" required 
                     oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                 </div>
@@ -204,12 +233,14 @@ if (isset($_SESSION['email'])) {
     <!-- OVERLAY -->
     <div class="overlay">
         <div class="overlay-panel for-login">
-            <h2>New here?</h2>
+            <!-- APPLIED P3 STYLE HERE -->
+            <h2 class="p3-text p3-overlay-title">New here?</h2>
             <p>Create an account and get started.</p>
             <button type="button" class="ghost" id="signUpButton">Sign Up</button>
         </div>
         <div class="overlay-panel for-register">
-            <h2>Welcome back!</h2>
+            <!-- APPLIED P3 STYLE HERE -->
+            <h2 class="p3-text p3-overlay-title">Welcome back!</h2>
             <p>Already have an account? Log in instead.</p>
             <button type="button" class="ghost" id="signInButton">Sign In</button>
         </div>
