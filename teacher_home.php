@@ -60,6 +60,32 @@ $printedByRole = htmlspecialchars($_SESSION['admin_role']);
         .modal-avatar-text { width: 120px; height: 120px; border-radius: 50%; background: #1e2d6e; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: var(--gold); border: 3px solid var(--gold); margin: 0 auto 15px auto; }
         .clickable-name { cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
         .clickable-name:hover { color: var(--gold); text-decoration: underline; }
+
+        /* 🚨 NEW P3 LOGOUT STYLE 🚨 */
+        .p3-logout {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: "Poppins", sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            font-style: italic;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--muted);
+            text-decoration: none;
+            transform: skewX(-15deg);
+            transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            display: inline-block;
+            padding: 8px 16px;
+        }
+        .p3-logout:hover {
+            color: #ff0000; /* P3 Red */
+            font-size: 1.3rem; 
+            transform: skewX(-15deg) translateX(10px) scale(1.05);
+            text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.8); /* Hard black shadow */
+        }
     </style>
 </head>
 <body class="home-page">
@@ -71,7 +97,8 @@ $printedByRole = htmlspecialchars($_SESSION['admin_role']);
                 <div class="logo-mark"><img src="gsc_logo.png" alt="GSC Logo"></div>
                 <div class="logo-text">Teacher / Staff Portal<small>Logged in as: <?= $fullName ?> (<?= $printedByRole ?>)</small></div>
             </div>
-            <a href="logout2.php" class="logout" style="text-decoration:none;">Logout</a>
+            <!-- CHANGED LOGOUT BUTTON HERE -->
+            <a href="logout2.php" class="p3-logout">Logout</a>
         </header>
 
         <form method="get" action="teacher_home.php" class="no-print" style="display:flex; gap:12px; flex-wrap:wrap; align-items:end; margin: 20px 0;">
